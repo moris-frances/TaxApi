@@ -1,5 +1,6 @@
 package com.fhtw.slmexamfrances;
 
+import com.fhtw.slmexamfrances.model.ApiModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,24 @@ class SlmExamFrancesApplicationTests {
     @Autowired
     private MockMvc mockMvc;
 
+
     @Test
     void contextLoads() {
     }
     @BeforeEach
     void clear(){
 
+    }
+
+    @Test
+    void unitTestTaxCalculartor() {
+        ApiModel taxObject = new ApiModel();
+        double price = 4.5;
+        double percent = 10;
+        double expected = price+price*percent/100;
+        taxObject.setPrice(price);
+        taxObject.setTaxPercent(percent);
+        assertEquals(expected, taxObject.calculateTax());
     }
     String expected = "OK DOC";
     @Test
