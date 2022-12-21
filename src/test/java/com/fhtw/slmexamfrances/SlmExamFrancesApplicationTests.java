@@ -1,5 +1,6 @@
 package com.fhtw.slmexamfrances;
 
+import com.fhtw.slmexamfrances.model.ApiModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ class SlmExamFrancesApplicationTests {
     @Autowired
     private MockMvc mockMvc;
 
+
     @Test
     void contextLoads() {
     }
@@ -29,35 +31,30 @@ class SlmExamFrancesApplicationTests {
     void clear(){
 
     }
-    String expected = "OK DOC";
-    @Test
-    public void getTest() throws Exception {
-        RequestBuilder getRequest = MockMvcRequestBuilders.get("/api/get");
-        String expected = "Default";
-        MvcResult result = mockMvc.perform(getRequest)
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.valueOf("text/plain;charset=UTF-8"))).andReturn();
-        String actual = result.getResponse().getContentAsString();
 
-        assertEquals(expected, actual);
+    @Test
+    void unitTestTaxCalculartor() {
+        ApiModel taxObject = new ApiModel();
+        double price = 4.5;
+        double percent = 10;
+        double expected = price+price*percent/100;
+        taxObject.setPrice(price);
+        taxObject.setTaxPercent(percent);
+        assertEquals(expected, taxObject.calculateTax());
     }
+
+
     @Test
     public void setTest() throws Exception {
         String testMessage = "newMessage";
-        RequestBuilder setRequest = MockMvcRequestBuilders.get("/api/set?m=" + testMessage);
-        mockMvc.perform(setRequest).andExpect(status().isOk());;
 
-        RequestBuilder getRequest = MockMvcRequestBuilders.get("/api/get");
-        MvcResult result = mockMvc.perform(getRequest)
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.valueOf("text/plain;charset=UTF-8"))).andReturn();
-        String actual = result.getResponse().getContentAsString();
-        assertEquals(testMessage, actual);
+        RequestBuilder setRequest = MockMvcRequestBuilders.get("/api/tax?netprice=12.22&taxpercent=20");
+        MvcResult result = mockMvc.perform(setRequest).andExpect(status().isOk()).andExpect(content().contentType(MediaType.valueOf("text/plain;charset=UTF-8"))).andReturn();;;
+
+
+        assertEquals("14,664000", result);
 
     }
-    @Test
-    public void postTest() throws Exception {
 
-    }
 
 }
