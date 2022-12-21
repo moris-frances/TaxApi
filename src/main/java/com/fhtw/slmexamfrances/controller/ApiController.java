@@ -10,20 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiController {
     private final ApiModel model = new ApiModel();
-
-//    @RequestMapping(value = "/api/get")
-//    public ResponseEntity<String> getRequest() {
-//
-//        //return ResponseEntity.ok(model.getPrice());
-//    }
-//    @GetMapping(value = "/api/set")
-//    public ResponseEntity<String> setRequest(@RequestParam(value = "m") String message) {
-////        try {
-////            model.setData(message);
-////            return ResponseEntity.ok("Message was set");
-////        } catch (Exception e) {
-////            return ResponseEntity.badRequest().body(e.getMessage());
-////        }
-//    }
+    ///tax?netprice=12.22&taxpercent=20
+    @GetMapping(value = "/api/tax")
+    public ResponseEntity<String> getRequest(@RequestParam(value = "netprice") String price,
+                                             @RequestParam(value = "taxpercent")String pecent) {
+        try {
+            model.setPrice(Double.parseDouble(price));
+            model.setTaxPercent(Double.parseDouble(pecent));
+            double result = model.calculateTax();
+            return ResponseEntity.ok(String.format("%f",result));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }
